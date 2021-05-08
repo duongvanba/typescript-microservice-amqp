@@ -19,13 +19,17 @@ export class AmqpTransporter implements Transporter {
     }
 
     async publish(topic: string, data: Buffer, options: PublishOptions = {}) {
-        await this.push_channel.assertExchange(topic, 'topic', { autoDelete: true })
-        await this.push_channel.publish(
-            topic,
-            options.route,
-            data,
-            { replyTo: options.reply_to, messageId: options.id }
-        )
+        try {
+            await this.push_channel.assertExchange(topic, 'topic', { autoDelete: true })
+            await this.push_channel.publish(
+                topic,
+                options.route,
+                data,
+                { replyTo: options.reply_to, messageId: options.id }
+            )
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     private async getChannel(options: ListenOptions) {
@@ -60,4 +64,4 @@ export class AmqpTransporter implements Transporter {
         return queue
     }
 
-} 
+}
