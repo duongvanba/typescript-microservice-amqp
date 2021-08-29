@@ -1,6 +1,6 @@
 {
   "name": "typescript-microservice-amqp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/index.js",
   "repository": "github.com:duongvanba/typescript-microservice-amqp.git",
   "author": "duongvanba.com@gmail.com",
