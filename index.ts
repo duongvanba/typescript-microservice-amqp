@@ -10,6 +10,7 @@ export class AmqpTransporter implements Transporter {
 
     private push_channel: Channel
     private listen_default_channel: Channel
+
     private listeners = new ReplaySubject<{
         topic: string,
         cb: CallBackFunction,
@@ -17,14 +18,9 @@ export class AmqpTransporter implements Transporter {
         queue_name: string
     }>(1000)
 
-    private constructor(
-        private url: string
-    ) {
-
-    }
+    private constructor(private readonly url: string) { }
 
     private setup_listeners() {
-
         return this
             .listeners
             .pipe(
