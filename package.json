@@ -1,13 +1,14 @@
 {
   "name": "typescript-microservice-amqp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index.js",
   "repository": "github.com:duongvanba/typescript-microservice-amqp.git",
   "author": "duongvanba.com@gmail.com",
   "license": "MIT",
   "dependencies": {
     "amqplib": "^0.7.1",
-    "typescript-microservice": "^1.0.35"
+    "rxjs": "^7.3.0",
+    "typescript-microservice": "^1.0.39"
   },
   "devDependencies": {
     "@types/amqplib": "^0.5.17",
