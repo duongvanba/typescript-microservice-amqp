@@ -42,7 +42,7 @@ export class AmqpTransporter implements Transporter {
         await channel.bindQueue(queue, topic, options.route || '#')
 
         await channel.consume(queue, async (msg: Message) => {
-            channel.ack(msg)
+
             if (msg == null) {
                 this.#$on_error.next('')
                 return
@@ -56,6 +56,7 @@ export class AmqpTransporter implements Transporter {
                 delivery_attempt: msg.properties.headers["x-death"]?.length || 0
             }
             await cb(data)
+            channel.ack(msg)
         }, { noAck: false })
 
         return channel
@@ -136,7 +137,11 @@ export class AmqpTransporter implements Transporter {
                 topic,
                 options.route,
                 data,
-                { replyTo: options.reply_to, messageId: options.id } 
+                {
+                    replyTo: options.reply_to,
+                    messageId: options.id,
+
+                }
             )
         } catch (e) {
             console.error(e)
@@ -160,6 +165,15 @@ setImmediate(async () => {
     setInterval(() => { }, 10000)
     const rabbitmq = await AmqpTransporter.init(`amqp://smmv3:c77uvFhAVuNtTf6Z@54.169.27.236:5672`)
     console.log('Connected')
-    rabbitmq.listen('ahihi', data => console.log({ data }), { limit: 1 })
+    await rabbitmq.listen('ahihi1', async data => {
+        console.log('data received')
+        await new Promise(s => setTimeout(s, 3000))
+        console.log({data})
+        return 1
+    }, { limit: 1 })
+
+    console.log('Sending')
+    await rabbitmq.publish('ahihi1', Buffer.from('123'))
+    console.log('Sent')
 })
 

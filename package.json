@@ -8,6 +8,7 @@
   "dependencies": {
     "amqplib": "^0.7.1",
     "rxjs": "^7.3.0",
+    "ts-node": "^10.5.0",
     "typescript-microservice": "^1.0.39"
   },
   "devDependencies": {
