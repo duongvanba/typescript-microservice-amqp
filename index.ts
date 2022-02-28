@@ -18,6 +18,7 @@ export class AmqpError extends Error {
     }
 }
 
+
 export class AmqpTransporter implements Transporter {
 
     #push_connection: Connection
@@ -32,22 +33,25 @@ export class AmqpTransporter implements Transporter {
 
     private constructor(private readonly url: string) { }
 
-
     async #listen({ queue_name, topic, options, cb }: Callback) {
         const channel = await this.#getListenChannel(options)
         const { queue } = await channel.assertQueue(queue_name, {
-            autoDelete: true,
+            autoDelete: true
         })
-        await this.#push_channel.assertExchange(topic, 'topic', { autoDelete: true, })
+        await this.#push_channel.assertExchange(topic, 'topic', {
+            autoDelete: true
+        })
         await channel.bindQueue(queue, topic, options.route || '#')
 
         await channel.consume(queue, async (msg: Message) => {
-            channel.ack(msg)
+
             if (msg == null) {
                 this.#$on_error.next('')
                 return
             }
-            const { content, properties: { timestamp, messageId, replyTo } } = msg
+            try { channel.ack(msg) } catch (e) { }
+
+            const { content, properties: { timestamp, messageId, replyTo, } } = msg
             const data: TransporterMessage = {
                 content,
                 created_time: timestamp,
@@ -81,8 +85,6 @@ export class AmqpTransporter implements Transporter {
         this.#listen_channels = []
         const subscriptions = []
 
-        console.log(`Rabbitmq server connected`)
-
         for (const event of ['error', 'close']) {
             subscriptions.push(fromEvent(this.#push_connection, event).subscribe(this.#$on_error))
             subscriptions.push(fromEvent(this.#listen_connection, event).subscribe(this.#$on_error))
@@ -98,7 +100,7 @@ export class AmqpTransporter implements Transporter {
         }
 
         return {
-            unsubscribe: async () => {
+            clear: async () => {
                 await subscriptions.map(s => s.unsubscribe())
                 try { await this.#listen_connection.close() } catch (e) { }
                 try { await this.#push_connection.close() } catch (e) { }
@@ -106,27 +108,25 @@ export class AmqpTransporter implements Transporter {
         }
     }
 
-    async #start() {
+
+    static async init(url: string = process.env.AMQP_TRANSPORTER) {
+        const amqp = new this(url)
+
+        // Infiniti loop
         await new Promise(async success => {
             while (true) {
                 try {
-                    const subscription = await this.#setup()
+                    const loop = await amqp.#setup()
                     success(1)
-                    await firstValueFrom(this.#$on_error)
-                    await subscription.unsubscribe()
-                } catch (e) {
-                }
-                console.log(`Error with rabbitmq, reconnect in 1s...`)
+                    await firstValueFrom(amqp.#$on_error)
+                    await loop.clear()
+                } catch (e) { }
+                console.error(`Error with rabbitmq, reconnect in 1s...`)
                 await sleep(1000)
             }
 
         })
-    }
-
-    static async init(url: string = process.env.AMQP_TRANSPORTER) {
-        const instance = new this(url)
-        await instance.#start()
-        return instance
+        return amqp
     }
 
     async publish(topic: string, data: Buffer, options: PublishOptions = {}) {
@@ -136,7 +136,8 @@ export class AmqpTransporter implements Transporter {
                 topic,
                 options.route,
                 data,
-                { replyTo: options.reply_to, messageId: options.id } 
+                { replyTo: options.reply_to, messageId: options.id, },
+
             )
         } catch (e) {
             console.error(e)
@@ -153,13 +154,4 @@ export class AmqpTransporter implements Transporter {
         return queue_name
     }
 
-}
-
-
-setImmediate(async () => {
-    setInterval(() => { }, 10000)
-    const rabbitmq = await AmqpTransporter.init(`amqp://smmv3:c77uvFhAVuNtTf6Z@54.169.27.236:5672`)
-    console.log('Connected')
-    rabbitmq.listen('ahihi', data => console.log({ data }), { limit: 1 })
-})
-
+} 
