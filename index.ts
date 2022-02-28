@@ -31,7 +31,9 @@ export class AmqpTransporter implements Transporter {
 
     #$on_error = new Subject()
 
-    private constructor(private readonly url: string) { }
+    private constructor(private readonly url: string) {
+        process.env.DEBUG && this.#$on_error.subscribe(console.error)
+    }
 
     async #listen({ queue_name, topic, options, cb }: Callback) {
         const channel = await this.#getListenChannel(options)
@@ -60,7 +62,6 @@ export class AmqpTransporter implements Transporter {
                 delivery_attempt: msg.properties.headers["x-death"]?.length || 0
             }
             await cb(data)
-            channel.ack(msg)
         }, { noAck: false })
 
         return channel
@@ -144,7 +145,7 @@ export class AmqpTransporter implements Transporter {
                 }
             )
         } catch (e) {
-            console.error(e)
+            process.env.DEBUG && console.error(e)
         }
     }
 
