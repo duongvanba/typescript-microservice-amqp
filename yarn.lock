@@ -179,10 +179,10 @@ typescript-decorator-builder@1.0.6:
   dependencies:
     reflect-metadata "^0.1.13"
 
-typescript-microservice@^1.0.39:
-  version "1.0.39"
-  resolved "https://registry.yarnpkg.com/typescript-microservice/-/typescript-microservice-1.0.39.tgz#90dd8e95dab20a2e68621d22a5950714a424b720"
-  integrity sha512-Sqp6VZIU0khJKmIlOvIxZ4Emu3aJht7EWVDkT0NXV81/nyisr5/i3u87unjFPnK7h3z554af8PKaiaWaOcVzbg==
+typescript-microservice@^1.0.40:
+  version "1.0.40"
+  resolved "https://registry.yarnpkg.com/typescript-microservice/-/typescript-microservice-1.0.40.tgz#1f19a9e800e04d414c80c70f539214ad1898fed0"
+  integrity sha512-GEwlNg/3ZIOg0mHQMUhIJx1oCcHL3f3fKyvuo/KzmTgOqTyMVNBgDw2EzB+5WJW3mL06ExBGIDOMxAWXXeb9NQ==
   dependencies:
     p-queue "^6.6.2"
     reflect-metadata "^0.1.13"

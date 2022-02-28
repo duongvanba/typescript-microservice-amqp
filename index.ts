@@ -60,6 +60,7 @@ export class AmqpTransporter implements Transporter {
                 delivery_attempt: msg.properties.headers["x-death"]?.length || 0
             }
             await cb(data)
+            channel.ack(msg)
         }, { noAck: false })
 
         return channel
@@ -136,8 +137,11 @@ export class AmqpTransporter implements Transporter {
                 topic,
                 options.route,
                 data,
-                { replyTo: options.reply_to, messageId: options.id, },
+                {
+                    replyTo: options.reply_to,
+                    messageId: options.id,
 
+                }
             )
         } catch (e) {
             console.error(e)
