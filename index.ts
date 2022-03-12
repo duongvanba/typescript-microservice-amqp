@@ -1,6 +1,6 @@
 import { Message, connect, Channel, Connection } from 'amqplib'
 import { Message as TransporterMessage, Transporter, ListenOptions, CallBackFunction, PublishOptions, sleep } from 'typescript-microservice'
-import { fromEvent, firstValueFrom, Subject } from 'rxjs'
+import { fromEvent, firstValueFrom, Subject, Subscription } from 'rxjs'
 
 export type Callback = {
     topic: string,
@@ -151,12 +151,14 @@ export class AmqpTransporter implements Transporter {
 
 
 
-    async listen(topic: string, cb: CallBackFunction, options: ListenOptions = {}) {
+    listen(topic: string, cb: CallBackFunction, options: ListenOptions = {}) {
         const queue_name = options.fanout ? '' : `${topic}${options.route || ''}`
         const config: Callback = { cb, options, queue_name, topic }
         this.#callbacks.push(config)
-        await this.#listen(config)
-        return queue_name
+        this.#listen(config)
+        return {
+            unsubscribe: () => { }
+        } as any
     }
 
 } 

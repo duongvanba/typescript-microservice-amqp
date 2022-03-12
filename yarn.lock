@@ -177,22 +177,14 @@ tslib@~2.1.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.1.0.tgz#da60860f1c2ecaa5703ab7d39bc05b6bf988b97a"
   integrity sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
 
-typescript-decorator-builder@1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/typescript-decorator-builder/-/typescript-decorator-builder-1.0.6.tgz#8fa43ae3dc08e16318a7564cac75dbf7cedc24f0"
-  integrity sha512-7byxSrJaZJ23JngmFLgocNo6CL0BbNfNuvY7n0O62X+vu7tw7vgihlJat6XMpIz/cZ3EYQA0Hn5zqEgQeag8OA==
-  dependencies:
-    reflect-metadata "^0.1.13"
-
-typescript-microservice@^1.0.40:
-  version "1.0.40"
-  resolved "https://registry.yarnpkg.com/typescript-microservice/-/typescript-microservice-1.0.40.tgz#1f19a9e800e04d414c80c70f539214ad1898fed0"
-  integrity sha512-GEwlNg/3ZIOg0mHQMUhIJx1oCcHL3f3fKyvuo/KzmTgOqTyMVNBgDw2EzB+5WJW3mL06ExBGIDOMxAWXXeb9NQ==
+typescript-microservice@^1.0.41:
+  version "1.0.41"
+  resolved "https://registry.yarnpkg.com/typescript-microservice/-/typescript-microservice-1.0.41.tgz#ef23fc353fa3abe5338b6c0caf4c127e5ad13b1b"
+  integrity sha512-7fm3myQaDpU0zJz7meFFVO9Bk/HFMlN7OR9dguT4lbOAGkADrr0h8tBnA8KvK0R6FHAzCRoPqea2hMokegIvyQ==
   dependencies:
     p-queue "^6.6.2"
     reflect-metadata "^0.1.13"
     rxjs "^6.5.4"
-    typescript-decorator-builder "1.0.6"
     uuid "^7.0.2"
 
 url-parse@~1.5.1:
